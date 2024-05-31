@@ -8,10 +8,15 @@ By using `ipc_parser` you will be able to get the data frame of International Pa
 pip install ipc_parser
 ```
 
+Download IPC_scheme xml file from following link:
+https://www.wipo.int/ipc/itos4ipc/ITSupport_and_download_area/20240101/MasterFiles/index.html
+
 ```python
 from ipc_parser.parser import IpcParser
 
-ipc_obj = IpcParser(ipc_xml=path_to_ipc_xml)
+path_to_xml = "EN_ipc_scheme_20240101.xml"
+
+ipc_obj = IpcParser(ipc_xml=path_to_xml)
 df = ipc_obj.get_dataframe()
 
 
