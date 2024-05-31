@@ -3,18 +3,32 @@ import re
 import pandas as pd
 from lxml import etree as ET
 
+XML_ERROR = """
+ IPC Scheme File Loading Problem
+ Please download the ipc_xml scheme file from:
+ https://www.wipo.int/ipc/itos4ipc/ITSupport_and_download_area/20240101/MasterFiles/index.html
+ and set the corrected file address in ipc_xml
+ """
+
 
 class IpcParser:
+    global XML_ERROR
+
     def __init__(
-        self, ipc_xml, ns="{http://www.wipo.int/classifications/ipc/masterfiles}"
+        self, ipc_xml="", ns="{http://www.wipo.int/classifications/ipc/masterfiles}"
     ):
+        if not ipc_xml:
+            raise Exception(XML_ERROR)
         self.file_name = ipc_xml
         self.default_ns = ns
 
     def __load_ipc_xml__(self):
         # Load the XML file
-        tree = ET.parse(self.file_name)
-        self.root = tree.getroot()
+        try:
+            tree = ET.parse(self.file_name)
+            self.root = tree.getroot()
+        except:
+            raise Exception(XML_ERROR)
 
     def __clean_text__(self, text):
         return text.strip().replace("\n", "").replace("\t", "")
@@ -104,7 +118,3 @@ class IpcParser:
                     }
                 )
         return pd.DataFrame(df)
-
-
-df = IpcParser(ipc_xml="EN_ipc_scheme_20240101.xml")
-print(df.get_dataframe())
